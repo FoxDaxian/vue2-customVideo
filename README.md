@@ -1,2 +1,1 @@
-# vue2-customVideo
-vue2-customVideo
+<h2 align="center">vue2-custom-video<h2>

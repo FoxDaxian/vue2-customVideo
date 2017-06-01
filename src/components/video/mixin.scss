@@ -1,0 +1,247 @@
+//字体大小设置图标大小，最小从12PX开始
+@import "./util.scss";
+
+//清除浮动
+@mixin cb {
+	&:after{
+		content:"";
+		display: block;
+		clear: both;
+	}
+}
+
+//播放图标
+@mixin icon_play {
+	width: em(20em);
+	height: em(20em);
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+	}
+	&:after{
+		border-width: em(10em) 0 em(10em) em(18em);
+		border-style: solid;
+		border-top-color: transparent;
+		border-bottom-color: transparent;
+		left: em(1em);
+	}
+	&:before{
+
+	}
+}
+//暂停图标
+@mixin icon_pause {
+	width: em(20em);
+	height: em(20em);
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+		width: em(5em);
+		height: 100%;
+		box-shadow: inset 0 0 0 100000px;
+	}
+	&:after{
+		left: em(1em);
+	}
+	&:before{
+		right: em(1em);
+	}
+}
+//3格音量图标
+@mixin icon_volume3 {
+	width: 0;
+	height: 0;
+	padding: em(5em) em(3em);
+	border:em(5em) solid;
+	border-left: none;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	box-shadow: inset em(4em) 0 0 0px;
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+		border-radius: 50%;
+	}
+	&:after{
+		width: em(10em);
+		height: em(10em);
+		border: em(6em) double;
+		border-top-color: transparent;
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		top: 0;
+		bottom: 0;
+		margin:auto 0;
+		left: em(-3em);
+
+	}
+	&:before{
+		width: em(25em);
+		height: em(25em);
+		border: em(2em) solid;
+		border-top-color: transparent;
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		top: 0;
+		bottom: 0;
+		margin:auto 0;
+		left: em(-6em);
+	}
+}
+//2格音量图标
+@mixin icon_volume2 {
+	width: 0;
+	height: 0;
+	padding: em(5em) em(3em);
+	border:em(5em) solid;
+	border-left: none;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	box-shadow: inset em(4em) 0 0 0px;
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+		border-radius: 50%;
+	}
+	&:after{
+		width: em(10em);
+		height: em(10em);
+		border: em(6em) double;
+		border-top-color: transparent;
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		top: 0;
+		bottom: 0;
+		margin:auto 0;
+		left: em(-3em);
+
+	}
+	&:before{
+
+	}
+}
+//1格音量图标
+@mixin icon_volume1 {
+	width: 0;
+	height: 0;
+	padding: em(5em) em(3em);
+	border:em(5em) solid;
+	border-left: none;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	box-shadow: inset em(4em) 0 0 0px;
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+		border-radius: 50%;
+	}
+	&:after{
+		width: em(10em);
+		height: em(10em);
+		border: em(2em) solid;
+		border-top-color: transparent;
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		top: 0;
+		bottom: 0;
+		margin:auto 0;
+		left: em(1em);
+
+	}
+	&:before{
+
+	}
+}
+
+//静音图标
+@mixin icon_mute {
+	width: 0;
+	height: 0;
+	padding: em(5em) em(3em);
+	border:em(5em) solid;
+	border-left: none;
+	border-top-color: transparent;
+	border-bottom-color: transparent;
+	box-shadow: inset em(4em) 0 0 0px;
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+		width: em(2em);
+		height: em(12em);
+		box-shadow: inset 0 0 0 100000px;
+		top: 0;
+		bottom: 0;
+		margin:auto 0;
+		transform-origin:center center;
+		right: em(-15em);
+	}
+	&:after{
+		transform:rotate(45deg);
+
+	}
+	&:before{
+		transform:rotate(-45deg);
+	}
+}
+//全屏图标
+@mixin icon_full {
+	width: em(20em);
+	height: em(20em);
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+		width: 0;
+		height: 0;
+	}
+	&:after{
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		border-width:em(5em);
+		border-style: solid;
+		top: em(0);
+		right: em(0);
+	}
+	&:before{
+		border-right-color: transparent;
+		border-top-color: transparent;
+		border-width:em(5em);
+		border-style: solid;
+		bottom: em(0);
+		left: em(0);
+	}
+}
+//退出全屏图标
+@mixin icon_mini {
+	width: em(20em);
+	height: em(20em);
+	position: relative;
+	&:after,&:before{
+		content:"";
+		position: absolute;
+		width: 0;
+		height: 0;
+	}
+	&:after{
+		border-right-color: transparent;
+		border-top-color: transparent;
+		border-width:em(5em);
+		border-style: solid;
+		top: em(0);
+		right: em(0);
+	}
+	&:before{
+		border-left-color: transparent;
+		border-bottom-color: transparent;
+		border-width:em(5em);
+		border-style: solid;
+		bottom: em(0);
+		left: em(0);
+	}
+}

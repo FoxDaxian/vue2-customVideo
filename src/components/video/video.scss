@@ -1,0 +1,317 @@
+.wrap{
+	user-select: none;
+	font-size: 0;
+	font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei",华文细黑,STHeiti,MingLiu;
+	position: relative;
+	video{
+		cursor: pointer;
+		width: 100%;
+		height: 100%;
+		object-fit: fill;
+		position: relative;
+	}
+	//鼠标右键部分
+	.contextmenuBox{
+		position: absolute;
+		z-index: 101;
+		color:red;
+		background-color: rgba(#000, 0.8);
+		width: 150px;
+		.list{
+			width: 100%;			line-height: 30px;
+			text-align: center;
+			font-size: 16px;
+			color:#fff;
+			position: relative;
+			cursor: pointer;
+			&:hover{
+				background-color: #000;
+				.options{
+					display: block;
+				}
+			}
+			.function{
+
+			}
+			.options{
+				display: none;
+				position: absolute;
+				top: 0;
+				left: 100%;
+				width: 100%;
+				.option{
+					background-color: rgba(#000, 0.8);
+					width: 100%;
+					height: 30px;
+					line-height: 30px;
+					text-align: center;
+					&:hover{
+						background-color: #000;
+					}
+				}
+			}
+		}
+	}
+	.videoState{
+		cursor: pointer;
+		width: 100px;
+		height: 100px;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		top: 0;
+		left: 0;
+		margin:auto;
+		img{
+			width: 100%;
+			height: 100%;
+		}
+	}
+	.fullScreen{
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+	}
+	@keyframes fadeout{
+		from {
+			opacity:1;
+		}
+		to {
+			opacity:0;
+			bottom: -10000px;
+		}
+	}
+	.fadeout{
+		animation:fadeout 1s forwards;
+	}
+	.controls{
+		background-color: $bgc;
+		height: $controlsHeight;
+		box-sizing: border-box;
+		@include cb;
+		//播放按钮
+		.playBtn{
+			float: left;
+			padding: em(5em) em(10em);
+			font-size: $iconSize;
+			cursor: pointer;
+			&:hover{
+				background-color: $hoverBgc;
+			}
+			.play_icon{
+				@include icon_play;
+			}
+			.pause_icon{
+				@include icon_pause;
+			}
+		}
+		//进度条
+		.progressBar{
+			float: left;
+			height: 100%;
+			box-sizing: border-box;
+			position: relative;
+			font-size: $iconSize;
+			.bgBar{
+				height: em(5em);
+				background-color: $bgBar;
+				width: 96%;
+				border-radius: 14px;
+				margin:auto;
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				cursor: pointer;
+				.colorBar{
+					height: 100%;
+					border-radius: 14px;
+					background-color: $colorBar;
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					z-index: 10;
+				}
+				.bufferBar{
+					width: 1%;
+					height: 100%;
+					border-radius: 14px;
+					background-color: $bufferBar;
+					position: absolute;
+					bottom: 0;
+					left: 0;
+				}
+				.ball{
+					position: absolute;
+					top: 50%;
+					left: 0;
+					width: em(5em * 2);
+					height: em(5em * 2);
+					transform:translateX(em(-5em)) translateY(-50%);
+					background-color: $ball;
+					border-radius: 50%;
+					box-shadow: 0 0 5px rgba($ballBoxShadow, 0.5);
+					cursor: pointer;
+					z-index: 10;
+					&:hover{
+						box-shadow: 0 0 5px rgba($ballBoxShadow, 0.8);
+					}
+				}
+			}
+		}
+		//时间
+		.time{
+			cursor: default;
+			float: right;
+			height: 100%;
+			@include cb;
+			>div{
+				font-size: 14px;
+				transform:translateY(-50%);
+				position: relative;
+				float: left;
+				top: 50%;
+			}
+			.curTime{
+				margin-left: em(6em);
+			}
+			.sumTime{
+				margin-right: em(6em);
+			}
+		}
+		//音量
+		.volume{
+			float: right;
+			position: relative;
+			height: 100%;
+			font-size: $iconSize;
+			padding: 0 em(2em);
+			&:hover{
+				background-color: $hoverBgc;
+				.volumeBar{
+					visibility: visible;
+					top: -100px;
+				}
+			}
+			.volumeBtn{
+				cursor: pointer;
+				padding: em(5em) em(16.5em) em(5em) em(4.5em);
+				.volume_icon3{
+					@include icon_volume3;
+				}
+				.volume_icon2{
+					@include icon_volume2;
+				}
+				.volume_icon1{
+					@include icon_volume1;
+				}
+				.mute_icon{
+					@include icon_mute;
+				}
+			}
+			.volumeBar{
+				visibility: hidden;
+				position: absolute;
+				width: em(32em);
+				height: em(100em);
+				background-color: rgba($bgc, 0.8);
+				top: -10000px;
+				left: 0;
+				border-top-right-radius: 6px;
+				border-top-left-radius: 6px;
+				padding: em(2em) em(2em) 0;
+				.bgBar{
+					width: em(5em);
+					height: em(100em * 0.8);
+					border-radius: 14px;
+					position: relative;
+					top: 50%;
+					transform:translateY(-50%);
+					margin:0 auto;
+					background-color: $bgBar;
+					cursor: pointer;
+					.colorBar{
+						width: 100%;
+						height: 0;
+						border-radius: 14px;
+						background-color: $colorBar;
+						position: absolute;
+						bottom: 0;
+						left: 0;
+					}
+					.ball{
+						position: absolute;
+						bottom: 0;
+						left: 50%;
+						transform:translateX(-50%) translateY(50%);
+						width: em(5em * 2);
+						height: em(5em * 2);
+						background-color: $ball;
+						border-radius: 50%;
+						box-shadow: 0 0 5px rgba($ballBoxShadow, 0.5);
+						&:hover{
+							box-shadow: 0 0 5px rgba($ballBoxShadow, 0.8);
+						}
+					}
+				}
+			}
+			.volumeBarShow{
+				visibility: visible;
+				top: -100px;
+			}
+		}
+		//转换清晰度
+		.definition{
+			float: right;
+			width: 50px;
+			height: 100%;
+			font-size: 14px;
+			position: relative;
+			.curDefinition{
+				text-align: center;
+				height:$controlsHeight;
+				line-height: $controlsHeight;
+			}
+			.outherDefinition{
+				cursor: pointer;
+				position: absolute;
+				width: 100%;
+				top: ($controlsHeight * -3);
+				>div{
+					&:hover{
+						background-color: $hoverBgc;
+					}
+					text-align: center;
+					height:$controlsHeight;
+					line-height: $controlsHeight;
+				}
+				.high{
+
+				}
+				.middle{
+
+				}
+				.low{
+
+				}
+			}
+		}
+		.fullChange{
+			float: right;
+			padding: em(5em) em(10em);
+			font-size: $iconSize;
+			cursor: pointer;
+			&:hover{
+				background-color: $hoverBgc;
+			}
+			.fullChangeFull{
+				@include icon_full;
+			}
+			.fullChangeMini{
+				@include icon_mini;
+			}
+		}
+	}
+}

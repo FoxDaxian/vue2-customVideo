@@ -1,0 +1,8 @@
+//confige part 
+$base_fontSize : 12;
+
+//convert to em function
+//传入的参数是几，最后得到的px就接近于几
+@function em( $size ) {
+	@return $size / $base_fontSize;
+}
