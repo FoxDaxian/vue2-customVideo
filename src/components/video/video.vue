@@ -12,7 +12,6 @@
 	<!-- 鼠标右键  播放暂停遮罩物 初始显示图片-->
 	<div class="wrap" :style="{width,height}" ref="wrap">
 		<video 
-		controls="" 
 		:poster="poster"
 		ref="video"
 		:src="src"
@@ -24,9 +23,10 @@
 
 	<div class="contextmenuBox" v-show="contextmenuFlagg" :style="contextmenuStyle" ref="contextmenuBox" @contextmenu="contextmenuBox">
 		<div class="list" v-for="item in contextmenuList" :style="{height:contextmenuListHight + 'px'}">
-			<div class="function" v-text="item.function"></div>
+			<div class="function" v-if="!!item.closeFn" v-text="item.function" @click="item.closeFn"></div>
+			<div class="function" v-else v-text="item.function"></div>
 			<div class="options">
-				<div class="option" v-for="innerItem in item.options" v-text="innerItem"></div>
+				<div class="option" v-for="innerItem in item.options" v-text="innerItem.value" @click="item.optionsFn(innerItem.value)"></div>
 			</div>
 		</div>
 	</div>
@@ -115,13 +115,27 @@
 				},
 				contextmenuList:[{
 					function:"播放速度",
-					options:[0.5,1,1.25,1.5,2]
+					options:[{
+						value:0.5
+					},{
+						value:1
+					},{
+						value:1.25
+					},{
+						value:1.5
+					},{
+						value:2
+					}],
+					optionsFn:( value ) => {
+						this.v.playbackRate = value;
+					}
 				},{
-					function:"镜像视频"
+					function:"I'm fox"
 				},{
-					function:"我是狐狸"
-				},{
-					function:"关闭"
+					function:"关闭",
+					closeFn:() => {
+						this.contextmenuFlagg = false;
+					}
 				}],
 				contextmenuListHight:30
 
@@ -130,7 +144,7 @@
 		props:["src","width","height","playImg","poster"],
 		methods:{
 			contextmenuBox(e){
-				var ev = e || window.event;
+				const ev = e || window.event;
 				ev.preventDefault();
 				return false;
 			},
@@ -154,10 +168,9 @@
 			playFn(){
 				this.v.paused ? this.v.play() : this.v.pause();
 				this.playBtnClass = this.v.paused ? "play_icon" : "pause_icon";
-				this.contextmenuFlagg = false;
 			},
 			switchVolume(e){
-				var ev = e || window.event;
+				const ev = e || window.event;
 				if( ev.target.classList.contains("clickIcon") || ev.target.classList.contains("volumeBtn") ){
 					if( this.v.volume === 0 ){
 						this.v.volume = this.lastVolume;
@@ -240,7 +253,7 @@
 			};
 			
 			const VdragClick = (e) => {
-				var ev = e || window.event;
+				const ev = e || window.event;
 				(ev.target === this.$refs.volumeBgBar) && (this.initVolumePercentage = this.$refs.volumeBgBar.offsetHeight - ev.offsetY);
 				(ev.target.classList.contains("colorBar")) && (this.initVolumePercentage = this.$refs.volumeBgBar.offsetHeight - (ev.offsetY + this.$refs.volumeBall.offsetTop + this.$refs.volumeBall.offsetHeight));
 				this.v.volume = this.lastVolume = this.initVolumePercentage / this.$refs.volumeBgBar.offsetHeight;
@@ -297,7 +310,7 @@
 				this.progressFlag = !this.progressFlag;
 			};
 			const PdragClick = (e) => {
-				var ev = e || window.event;
+				const ev = e || window.event;
 				ev.target.classList.contains("ball") || (this.initProgressPercentage = ev.offsetX);
 				this.v.currentTime = this.initProgressPercentage / bgBarWidth * this.v.duration;
 			};
@@ -418,6 +431,13 @@
 				this.v.currentTime = 0;
 			}
 
+			//点击其他地方隐藏右键菜单
+			this.windowFn.hideContextmenu = (e) => {
+				const ev = e || window.event;
+				ev.target.classList.contains("function") || (this.contextmenuFlagg = false);
+			};
+			window.addEventListener('click', this.windowFn.hideContextmenu, false);
+
 
 			//加载视频错误触发回调函数
 			this.v.onerror = function() {
@@ -431,6 +451,7 @@
 			window.removeEventListener('mouseup',this.windowFn.VdragMouseUp, false);
 			window.removeEventListener('mousemove', this.windowFn.PdragMouseMove, false);
 			window.removeEventListener('mouseup', this.windowFn.PdragMouseUp, false);
+			window.removeEventListener('click', this.windowFn.hideContextmenu, false);
 		}
 		
 	};

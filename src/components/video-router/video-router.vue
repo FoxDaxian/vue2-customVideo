@@ -2,7 +2,7 @@
 	<div class="wrap">
 		<router-link to="/">返回</router-link>
 		<video-com
-		src="../../../static/eva.mp4"
+		src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
 		width="800px"
 		height="500px"
 		playImg="../../../static/play.png"
