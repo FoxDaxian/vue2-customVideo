@@ -5,8 +5,8 @@
 		src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
 		width="800px"
 		height="500px"
-		playImg="../../../static/play.png"
-		poster="../../../static/eva.jpg"
+		:playImg='require("../../../static/play.png")'
+		:poster='require("../../../static/eva.jpg")'
 		></video-com>
 	</div>
 </template>

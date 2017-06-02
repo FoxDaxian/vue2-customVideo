@@ -10,7 +10,7 @@
 	<!-- 暂定有 播放 进度条 时间 声音 清晰度转换  全屏 -->
 	<!-- 键盘空格播放，上下键音量控制 -->
 	<!-- 鼠标右键  播放暂停遮罩物 初始显示图片-->
-	<div class="wrap" :style="{width,height}" ref="wrap">
+	<div class="wrap" :style="{width,height}" ref="wrap" @keydown="keyFn" @click="keyCondition">
 		<video 
 		:poster="poster"
 		ref="video"
@@ -143,6 +143,35 @@
 		},
 		props:["src","width","height","playImg","poster"],
 		methods:{
+			keyCondition(){
+				this.$el.setAttribute("tabindex",1);
+				this.$el.focus();
+			},
+			keyFn(e){
+				const ev = e || window.event;
+				(ev.keyCode === 32) && this.playFn();
+				console.log(ev.keyCode);
+				switch( true ){
+					case( ev.keyCode === 38 ):
+					this.v.volume > 0.9 && (this.v.volume = 1);
+					this.v.volume < 1 && this.v.volume <= 0.9  && (this.v.volume += 0.1);
+					this.initVolumePercentage = this.$refs.volumeBgBar.offsetHeight * this.v.volume; 
+					break;
+					case( ev.keyCode === 40 ):
+					this.v.volume < 0.1 && (this.v.volume = 0);
+					this.v.volume > 0 && this.v.volume >= 0.1  && (this.v.volume -= 0.1);
+					this.initVolumePercentage = this.$refs.volumeBgBar.offsetHeight * this.v.volume; 
+					break;
+					case( ev.keyCode === 37 ):
+
+					break;
+					case( ev.keyCode === 39 ):
+					
+
+					break;
+				}
+				this.volumeClass = util.changeVolumeIconClass(this.v.volume);
+			},
 			contextmenuBox(e){
 				const ev = e || window.event;
 				ev.preventDefault();
