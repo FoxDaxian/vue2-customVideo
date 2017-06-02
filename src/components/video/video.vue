@@ -9,7 +9,6 @@
 <template>
 	<!-- 暂定有 播放 进度条 时间 声音 清晰度转换  全屏 -->
 	<!-- 键盘空格播放，上下键音量控制 -->
-	<!-- 键盘操作音量上有bug -->
 	<!-- 鼠标右键  播放暂停遮罩物 初始显示图片-->
 	<div class="wrap" :style="{width,height}" ref="wrap" @keydown="keyFn" @click="keyCondition">
 		<video 
@@ -172,6 +171,7 @@
 					break;
 				}
 				this.volumeClass = util.changeVolumeIconClass(this.v.volume);
+				this.lastVolume = this.v.volume;
 			},
 			contextmenuBox(e){
 				const ev = e || window.event;

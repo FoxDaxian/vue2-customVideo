@@ -2,7 +2,7 @@
 	<div class="wrap">
 		<router-link to="/">返回</router-link>
 		<video-com
-		src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+		src="http://www.runoob.com/try/demo_source/movie.mp4"
 		width="800px"
 		height="500px"
 		:playImg='require("../../../static/play.png")'
