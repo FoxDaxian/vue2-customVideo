@@ -10,23 +10,33 @@
 	<!-- 暂定有 播放 进度条 时间 声音 清晰度转换  全屏 -->
 	<!-- 键盘空格播放，上下键音量控制 -->
 	<!-- 鼠标右键  播放暂停遮罩物 初始显示图片-->
-	<div class="wrap" :style="{width,height}" ref="wrap" @keydown="keyFn" @click="keyCondition">
+	<!-- bug -->
+	<!-- 目前的问题，清晰度切换的时候回闪烁 -->
+	<div class="wrap" :style="{width:tempWidth,height:tempHeight}" ref="wrap" @keydown="keydownFn" @keyup="keyupFn" @click="keyCondition">
+		<video 
+		:src="tempVideoSrc"
+		class="tempVideo"
+		v-if="tempVideoSrc" 
+		@canplay="tempVideoFn"
+		preload="auto" 
+		></video>
 		<video 
 		:poster="poster"
 		ref="video"
 		:src="src"
 		@click="playFn"
 		@contextmenu="contextmenu"
+		preload="auto"
 		>
 		<h1>您的浏览器不支持H5的video标签，请更换较为先进的浏览器</h1>
 	</video>
 
 	<div class="contextmenuBox" v-show="contextmenuFlagg" :style="contextmenuStyle" ref="contextmenuBox" @contextmenu="contextmenuBox">
-		<div class="list" v-for="item in contextmenuList" :style="{height:contextmenuListHight + 'px'}">
+		<div class="list" v-for="item in contextmenuList" :class="[item.static]" :style="{height:contextmenuListHight + 'px'}">
 			<div class="function" v-if="!!item.closeFn" v-text="item.function" @click="item.closeFn"></div>
 			<div class="function" v-else v-text="item.function"></div>
-			<div class="options">
-				<div class="option" v-for="innerItem in item.options" v-text="innerItem.value" @click="item.optionsFn(innerItem.value)"></div>
+			<div class="options" v-if="item.options">
+				<div class="option" :class="{'selected':innerItem.sel}" v-for="innerItem in item.options" v-text="innerItem.value" @click="item.optionsFn(innerItem.value)"></div>
 			</div>
 		</div>
 	</div>
@@ -35,6 +45,18 @@
 	<div class="videoState" v-if="playImgFlag" @contextmenu="contextmenu"  @click="playFn">
 		<img :src="playImg" alt="">
 	</div>
+
+	<transition name="fade">
+		<div class="keyDownShow" v-if="keyDownShowFlag" :style="keyDownShowStyle">
+			<div class="volumeBox">
+				<div class="volumeBtn">
+					<div :class="[volumeClass]"></div>
+				</div>
+			</div>
+			<div v-if="v" class="valumeNum">{{parseInt(v.volume * 100) === 0 ? "静音" : parseInt(v.volume * 100)}}</div>
+			<div v-else class="valumeNum">100</div>
+		</div>
+	</transition>
 
 	<div class="controls" ref="controls">
 		<!-- 播放按钮 -->
@@ -56,14 +78,12 @@
 			<div :class="[fullChangeClass]"></div>
 		</div>
 		<!-- 转换清晰度 -->
-			<!-- <div class="definition">
-				<div class="curDefinition">高清</div>
-				<div class="outherDefinition">
-					<div class="high">超清</div>
-					<div class="middle">高清</div>
-					<div class="low">流畅</div>
+		<div class="definition" v-if="definition">
+			<div class="curDefinition" v-text="definitionArr.find((item)=>item.sel).text"></div>
+			<div class="otherDefinition">
+				<div v-for="(item,index) in definitionArr" v-text="item.text" :class="{'select':item.sel}" @click="item.sel || changeDefinition(item,index)"></div >
 				</div>
-			</div> -->
+			</div>
 			<!-- 音量 -->
 			<div class="volume" @click="switchVolume">
 				<div class="volumeBar" ref="volumeBar">
@@ -73,7 +93,7 @@
 					</div>
 				</div>
 				<div class="volumeBtn">
-					<div :class="[volumeClass]" class="clickIcon"></div>
+					<div :class="[volumeClass]"></div>
 				</div>
 			</div>
 			<!-- 播放时间 -->
@@ -94,7 +114,11 @@
 
 		data () {
 			return {
+				tempWidth:this.width ? this.width : "800px",
+				tempHeight:this.height ? this.height : "500px",
+				v:null,
 				windowFn:{},//用于在组件销毁的时候取消winow上的绑定事件的
+				ontimeupdateFlag:true,//拖动进度条滑块的时候不让timeupdate方法触发
 				playBtnClass:"play_icon",
 				duration:"99:99",
 				curTime:"00:00",
@@ -116,62 +140,117 @@
 				contextmenuList:[{
 					function:"播放速度",
 					options:[{
-						value:0.5
+						value:0.5,
+						sel:false
 					},{
-						value:1
+						value:1,
+						sel:true
 					},{
-						value:1.25
+						value:1.25,
+						sel:false
 					},{
-						value:1.5
+						value:1.5,
+						sel:false
 					},{
-						value:2
+						value:2,
+						sel:false
 					}],
 					optionsFn:( value ) => {
+						this.contextmenuList[0].options.find( item => item.sel ).sel = false;
+						this.contextmenuList[0].options.find( item => item.value === value ).sel = true;
 						this.v.playbackRate = value;
 					}
 				},{
-					function:"I'm fox"
+					function:"I'm fox",
+					static:"static"
 				},{
 					function:"关闭",
 					closeFn:() => {
 						this.contextmenuFlagg = false;
 					}
 				}],
-				contextmenuListHight:30
+				contextmenuListHight:30,
+				keyDownShowFlag:false,
+				keyDownShowTimer:null,
+				definitionArr:[{
+					src:this.definition && this.definition.high,
+					text:"超清",
+					sel:false
+				},{
+					src:this.src,
+					text:"高清",
+					sel:true
+				},{
+					src:this.definition && this.definition.low,
+					text:"流畅",
+					sel:false
+				}],
+				lastCurrentTime:null,
+				lastVideoState:null,
+				tempVideoSrc:null
 
 			};
 		},
-		props:["src","width","height","playImg","poster"],
+		props:["src","width","height","playImg","poster","menu","definition"],
 		methods:{
+			tempVideoFn(){
+				this.v.src = this.tempVideoSrc;
+				this.tempVideoSrc = null;
+				this.v.currentTime = this.lastCurrentTime;
+				this.lastVideoState || this.v.play();
+			},
+			changeDefinition( data, index ){
+				this.definitionArr.find( item => item.sel ).sel = false;
+				data.sel = true;
+				this.lastCurrentTime = this.v.currentTime;
+				this.lastVideoState = this.v.paused;
+				this.tempVideoSrc = data.src;
+			},
 			keyCondition(){
 				this.$el.setAttribute("tabindex",1);
 				this.$el.focus();
 			},
-			keyFn(e){
-				const ev = e || window.event;
+			keyupFn(){
+				this.keyDownShowTimer = setTimeout(() => {
+					this.keyDownShowFlag = false;
+				}, 1000);
+			},
+			keydownFn(e){
+				const ev = e || window.event,
+				sectionTime = this.v.duration * 0.01;//跳动的时间段
+				let temp = null;
 				(ev.keyCode === 32) && this.playFn();
-				console.log(ev.keyCode);
 				switch( true ){
 					case( ev.keyCode === 38 ):
 					this.v.volume > 0.9 && (this.v.volume = 1);
 					this.v.volume < 1 && this.v.volume <= 0.9  && (this.v.volume += 0.1);
+					this.v.volume = Number(this.v.volume.toFixed(4));
 					this.initVolumePercentage = this.$refs.volumeBgBar.offsetHeight * this.v.volume; 
 					break;
 					case( ev.keyCode === 40 ):
 					this.v.volume < 0.1 && (this.v.volume = 0);
 					this.v.volume > 0 && this.v.volume >= 0.1  && (this.v.volume -= 0.1);
+					this.v.volume = Number(this.v.volume.toFixed(4));
 					this.initVolumePercentage = this.$refs.volumeBgBar.offsetHeight * this.v.volume; 
 					break;
 					case( ev.keyCode === 37 ):
-
+					temp = this.v.currentTime > sectionTime ? this.v.currentTime - sectionTime : 0;
 					break;
 					case( ev.keyCode === 39 ):
-					
-
+					temp = this.v.currentTime + sectionTime < this.v.duration ? this.v.currentTime + sectionTime : this.v.duration;
 					break;
+				}
+				if( ev.keyCode === 38 || ev.keyCode === 40 ){
+					clearTimeout(this.keyDownShowTimer);
+					this.keyDownShowFlag = true;
 				}
 				this.volumeClass = util.changeVolumeIconClass(this.v.volume);
 				this.lastVolume = this.v.volume;
+				if( temp !== null ){
+					this.initProgressPercentage = temp / this.v.duration * this.bgBarWidth;
+					this.v.currentTime = temp;
+					this.curTime = util.formatDate(Math.round(this.v.currentTime));
+				}
 			},
 			contextmenuBox(e){
 				const ev = e || window.event;
@@ -179,6 +258,9 @@
 				return false;
 			},
 			contextmenu(e){
+				if( !this.menu ){
+					return false;
+				}
 				var ev = e || window.event,
 				w = parseInt(util.getStyle(this.$refs.contextmenuBox).width),
 				h = this.contextmenuList.length * this.contextmenuListHight;
@@ -186,11 +268,11 @@
 				this.contextmenuStyle.top = ev.offsetY + 5 + "px";
 				this.contextmenuStyle.left = ev.offsetX + "px";
 
-				(parseInt(this.width) - ev.offsetX < w) && (this.contextmenuStyle.left = ev.offsetX - w  + "px");
-				(parseInt(this.height) - ev.offsetY < h) && (this.contextmenuStyle.top = ev.offsetY  - h - 5 + "px");
+				(parseInt(this.tempWidth) - ev.offsetX < w) && (this.contextmenuStyle.left = ev.offsetX - w  + "px");
+				(parseInt(this.tempHeight) - ev.offsetY < h) && (this.contextmenuStyle.top = ev.offsetY  - h - 5 + "px");
 				if( ev.target.tagName.toLowerCase() === "img" ){
-					this.contextmenuStyle.left = parseInt(this.contextmenuStyle.left) + parseInt(this.width) / 2 - ev.target.offsetWidth / 2 + "px";
-					this.contextmenuStyle.top = parseInt(this.contextmenuStyle.top) + parseInt(this.height) / 2 - ev.target.offsetHeight / 2 + "px";
+					this.contextmenuStyle.left = parseInt(this.contextmenuStyle.left) + parseInt(this.tempWidth) / 2 - ev.target.offsetWidth / 2 + "px";
+					this.contextmenuStyle.top = parseInt(this.contextmenuStyle.top) + parseInt(this.tempHeight) / 2 - ev.target.offsetHeight / 2 + "px";
 				}
 				ev.preventDefault();
 				return false;
@@ -234,10 +316,13 @@
 			this.v = this.$refs.video;
 			//初始化播放时间和音量，可以把音量存到localStorge上，就可以保存用户的更改了
 			this.v.oncanplay = () => {
+
+				// console.log(this.lastCurrentTime);
 				this.duration = util.formatDate(Math.round(this.v.duration));
 				this.lastVolume = this.v.volume;
 			}
 
+			//缓冲部分
 			this.v.onprogress = () => {
 				this.bufferBarWidth = this.v.buffered.end(0) / this.v.duration * this.progressBarWidth * 0.96;
 			}
@@ -295,6 +380,11 @@
 			window.addEventListener('mouseup',this.windowFn.VdragMouseUp, false);
 			this.$refs.volumeBgBar.addEventListener('click', VdragClick, false);
 
+			//初始化音量显示块的宽度
+			this.keyDownShowStyle = {
+				width:parseInt(this.tempWidth) * 0.15 + 'px',
+			}
+
 
 			//进度条部分
 			//获取进度条box的宽度
@@ -314,11 +404,13 @@
 			const PdragMouseDown = ( e ) =>{
 				const ev = e || window.event;
 				this.progressFlag = !this.progressFlag;
+				this.ontimeupdateFlag && (this.ontimeupdateFlag = false);
 				PdragMouseDownNumber = ev.pageX;
 				PdragMouseDownBallNumber = this.$refs.progressBall.offsetLeft;
 			}
 
 			let bgBarWidth = exceptProgressBar * 0.96;//0.96来自scss
+			this.bgBarWidth = bgBarWidth;
 			let [progressMin,progressMax] = [0,bgBarWidth];
 			this.windowFn.PdragMouseMove = ( e ) =>{
 				if( !this.progressFlag ){
@@ -329,14 +421,15 @@
 				this.initProgressPercentage = PdragMouseMoveNumber - PdragMouseDownNumber + PdragMouseDownBallNumber;
 				this.initProgressPercentage = this.initProgressPercentage <= progressMin ? progressMin : this.initProgressPercentage;
 				this.initProgressPercentage = this.initProgressPercentage >= progressMax ? progressMax : this.initProgressPercentage;
-
-				this.v.currentTime = this.initProgressPercentage / bgBarWidth * this.v.duration;
+				this.curTime = util.formatDate(Math.round(this.initProgressPercentage / bgBarWidth * this.v.duration));
 			};
 			
 			this.windowFn.PdragMouseUp = ( e ) =>{
 				if( !this.progressFlag ){
 					return false;
 				}
+				this.ontimeupdateFlag = true;
+				this.v.currentTime = this.initProgressPercentage / bgBarWidth * this.v.duration;
 				this.progressFlag = !this.progressFlag;
 			};
 			const PdragClick = (e) => {
@@ -365,12 +458,11 @@
 			//获取不同浏览器下面的取消全屏方法
 			miniScreen_fn = document.exitFullscreen || document.msExitFullscreen || document.mozCancelFullScreen || document.oCancelFullScreen || document.webkitExitFullscreen,
 			hideControlsFn = () => {//全屏的时候过一段时间，让控制条消失
-				console.log(1);
 				this.$refs.controls.classList.contains("fadeout") && this.$refs.controls.classList.remove("fadeout");
 				hideControlsTimer !== null && clearTimeout(hideControlsTimer);
 				hideControlsTimer = setTimeout(() => {
 					this.$refs.controls.classList.add("fadeout");
-				},2000)
+				},5000)
 			},
 			keepControls = () => {
 				this.$refs.video.removeEventListener('mousemove', hideControlsFn);
@@ -397,8 +489,8 @@
 				fullChangeOnoff && (this.fullChangeClass = "fullChangeFull");
 				fullChangeOnoff ||(this.fullChangeClass = "fullChangeMini");
 				if( fullChangeOnoff ){
-					this.$refs.wrap.style.width = this.width;
-					this.$refs.wrap.style.height = this.height;
+					this.$refs.wrap.style.width = this.tempWidth;
+					this.$refs.wrap.style.height = this.tempHeight;
 					this.$refs.controls.classList.remove("fullScreen");
 
 					this.$refs.video.removeEventListener('mousemove', hideControlsFn);
@@ -408,6 +500,10 @@
 					//退出全屏的时候清除控制条消失定时器并移除消失类
 					this.$refs.controls.classList.contains("fadeout") && this.$refs.controls.classList.remove("fadeout");
 					hideControlsTimer !== null && clearTimeout(hideControlsTimer);
+					// 退出全屏的时候改变键盘操控音量显示块的大小
+					this.keyDownShowStyle = {
+						width:parseInt(this.tempWidth) * 0.15 + 'px',
+					}
 				}else{
 					this.$refs.wrap.style.width = window.screen.width + "px";
 					this.$refs.wrap.style.height = window.screen.height + "px";
@@ -416,6 +512,10 @@
 					this.$refs.video.addEventListener('mousemove', hideControlsFn);
 					this.$refs.controls.addEventListener('mouseover', keepControls);
 					this.$refs.controls.addEventListener('mouseout', releaseControls);
+					// 进入全屏的时候改变键盘操控音量显示块的大小
+					this.keyDownShowStyle = {
+						width:window.screen.width * 0.07 + 'px',
+					}
 				}
 				//调试进度条长度与slider的min与max值
 				exceptProgressBar = 0;
@@ -428,6 +528,7 @@
 				exceptProgressBar = this.$refs.controls.offsetWidth - exceptProgressBar;
 				this.progressBarWidth = exceptProgressBar;
 				bgBarWidth = exceptProgressBar * 0.96;//0.96来自scss
+				this.bgBarWidth = bgBarWidth;
 				[progressMin,progressMax] = [0,bgBarWidth];
 				//每次改变全屏立刻改变进度条bar的长度
 				this.initProgressPercentage = this.v.currentTime / this.v.duration * bgBarWidth;
@@ -451,6 +552,9 @@
 			
 			//当时间更新事件触发的时候改变当前时间，一阵一阵的走
 			this.v.ontimeupdate = () => {
+				if( !this.ontimeupdateFlag ){
+					return false;
+				}
 				this.curTime = util.formatDate(Math.round(this.v.currentTime));
 				this.initProgressPercentage = this.v.currentTime / this.v.duration * bgBarWidth;
 			}

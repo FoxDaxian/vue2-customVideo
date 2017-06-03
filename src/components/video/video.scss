@@ -3,12 +3,15 @@
 	font-size: 0;
 	font-family:"Microsoft YaHei",微软雅黑,"Microsoft JhengHei",华文细黑,STHeiti,MingLiu;
 	position: relative;
+	.tempVideo{
+		position: absolute;
+		z-index: -10;
+	}
 	video{
 		cursor: pointer;
 		width: 100%;
 		height: 100%;
 		object-fit: fill;
-		position: relative;
 	}
 	//鼠标右键部分
 	.contextmenuBox{
@@ -25,8 +28,8 @@
 			color:#fff;
 			position: relative;
 			cursor: pointer;
-			&:hover{
-				background-color: #000;
+			&:not(.static):hover{
+				background-color: #403F40;
 				.options{
 					display: block;
 				}
@@ -47,9 +50,18 @@
 					line-height: 30px;
 					text-align: center;
 					&:hover{
-						background-color: #000;
+						background-color: #403F40;
 					}
 				}
+				.selected{
+					background-color: #403F40;
+				}
+			}
+		}
+		.static{
+			cursor: default;
+			.function{
+				color:#717171;
 			}
 		}
 	}
@@ -66,6 +78,55 @@
 		img{
 			width: 100%;
 			height: 100%;
+		}
+	}
+	.fade-enter-active{
+		transition: opacity .1s
+	}
+	.fade-leave-active {
+		transition: opacity 2s
+	}
+	.fade-enter, .fade-leave-to {
+		opacity: 0
+	}
+	.keyDownShow{
+		border-radius: 8px;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform:translateY(-50%) translateX(-50%);
+		background-color: rgba($bgc, 0.5);
+		z-index: 102;
+		display: table;
+		vertical-align: middle;
+		.volumeBox{
+			display: table-cell;
+			vertical-align: middle;
+			.volumeBtn{
+				font-size: $iconSize * 2;
+				cursor: pointer;
+				padding: em(5em) em(16.5em) em(5em) em(4.5em);
+				.volume_icon3{
+					@include icon_volume3;
+				}
+				.volume_icon2{
+					@include icon_volume2;
+				}
+				.volume_icon1{
+					@include icon_volume1;
+				}
+				.mute_icon{
+					@include icon_mute;
+				}
+			}
+		}
+		.valumeNum{
+			display: table-cell;
+			vertical-align: middle;
+			color:#000;
+			font-size: 20px;
+			vertical-align: middle;
+			transform:translateX(-5px);
 		}
 	}
 	.fullScreen{
@@ -136,7 +197,6 @@
 					z-index: 10;
 				}
 				.bufferBar{
-					width: 1%;
 					height: 100%;
 					border-radius: 14px;
 					background-color: $bufferBar;
@@ -270,12 +330,19 @@
 			height: 100%;
 			font-size: 14px;
 			position: relative;
+			&:hover{
+				.otherDefinition{
+					display: block;
+				}
+			}
 			.curDefinition{
 				text-align: center;
 				height:$controlsHeight;
 				line-height: $controlsHeight;
 			}
-			.outherDefinition{
+			.otherDefinition{
+				display: none;
+				background-color: $bgc;
 				cursor: pointer;
 				position: absolute;
 				width: 100%;
@@ -287,6 +354,10 @@
 					text-align: center;
 					height:$controlsHeight;
 					line-height: $controlsHeight;
+				}
+				.select{
+					background-color: $hoverBgc;
+					cursor: default;
 				}
 				.high{
 
