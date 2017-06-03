@@ -12,8 +12,8 @@
 		<video-com
 		src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
 		:definition="definition"
-		:playImg='require("../../../static/play.png")'
-		:poster='require("../../../static/eva.jpg")'
+		:playImg='require("@/assets/play.png")'
+		:poster='require("@/assets/eva.jpg")'
 		:menu="true"
 		></video-com>
 	</div>
