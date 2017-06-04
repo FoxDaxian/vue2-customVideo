@@ -110,7 +110,7 @@
 	import util from "./util.js";
 	export default {
 
-		name: 'video',
+		name: 'vue-video',
 
 		data () {
 			return {
@@ -251,6 +251,8 @@
 					this.v.currentTime = temp;
 					this.curTime = util.formatDate(Math.round(this.v.currentTime));
 				}
+				ev.preventDefault();
+				return false;
 			},
 			contextmenuBox(e){
 				const ev = e || window.event;

@@ -11,7 +11,7 @@ export default {
 		return `${minute}:${second}`
 	},
 	// 根据音量值改变图标类名
-	changeVolumeIconClass(volume){
+	changeVolumeIconClass( volume ){
 		let tempClass;
 		(volume > 0.8 && volume <= 1) && (tempClass = "volume_icon3");
 		(volume > 0.45 && volume <= 0.8) && (tempClass = "volume_icon2");

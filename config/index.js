@@ -34,5 +34,13 @@ module.exports = {
     // In our experience, they generally work as expected,
     // just be aware of this issue when enabling this option.
     cssSourceMap: false
+  },
+  pack:{
+    env:require("./pack.env.js"),
+    libraryName:"video",
+    assetsRoot:path.resolve(__dirname,"../lib/"),
+    assetsSubDirectory: 'static',
+    assetsPublicPath:"/",
+    productionSourceMap: false
   }
 }
