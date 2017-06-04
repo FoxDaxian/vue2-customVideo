@@ -1,0 +1,23 @@
+{
+  "name": "vue2-video",
+  "version": "1.0.0",
+  "description": "video for vue2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a13821190779/vue2-customVideo.git"
+  },
+  "keywords": [
+    "vue2",
+    "video"
+  ],
+  "author": "fox",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/a13821190779/vue2-customVideo/issues"
+  },
+  "homepage": "https://github.com/a13821190779/vue2-customVideo#readme"
+}
