@@ -10,6 +10,7 @@
 		></video-com> -->
 		<vue-video
 		src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+		:definition="definition"
 		:playImg='require("@/assets/play.png")'
 		:poster='require("@/assets/eva.jpg")'
 		:menu="true"
