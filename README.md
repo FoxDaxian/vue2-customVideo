@@ -1,4 +1,4 @@
-#vue2-video
+# vue2-video
 轻量级vue2 video组件
 
 ```
