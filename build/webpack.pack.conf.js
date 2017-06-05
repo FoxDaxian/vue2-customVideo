@@ -3,6 +3,8 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
 function resolve (dir) {
 	return path.join(__dirname, '..', dir)
@@ -22,7 +24,6 @@ module.exports = {
 	resolve: {
 		extensions: ['.js', '.vue', '.json'],
 		alias: {
-			'vue$': 'vue/dist/vue.esm.js',
 			'@': resolve('src')
 		}
 	},
@@ -61,6 +62,14 @@ module.exports = {
 		compress: {
 			warnings: false,
 			drop_console: false
+		}
+	}),
+	new ExtractTextPlugin({
+		filename: `${config.pack.libraryName}.css`
+	}),
+	new OptimizeCSSPlugin({
+		cssProcessorOptions: {
+			safe: true
 		}
 	})
 	]
