@@ -4,6 +4,9 @@ import App from './App'
 import VueVideo from "../lib/";
 Vue.use(VueVideo);
 
+
+
+
 /* eslint-disable no-new */
 new Vue({
 	el: '#app',

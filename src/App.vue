@@ -15,11 +15,14 @@
 		:poster='require("@/assets/eva.jpg")'
 		:menu="true"
 		></vue-video>
+		<pre><code ref="code">{{size_code}}</code></pre>
 	</div>
 </template>
 
 <script>
 	import VideoCom from "./components/video/video.vue";
+	import hljs from 'highlight.js'
+	import "highlight.js/styles/monokai-sublime.css";
 	export default {
 		name: 'app',
 		data(){
@@ -27,15 +30,35 @@
 				definition:{
 					low:"http://oqvlh6ipq.bkt.clouddn.com/eva_low.mp4",
 					high:"http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
-				}
+				},
+				size_code: `
+				<vue-video
+				src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+				:definition="definition"
+				:playImg='require("@/assets/play.png")'
+				:poster='require("@/assets/eva.jpg")'
+				:menu="true"
+				></vue-video>
+
+				data(){
+					return {
+						definition:{
+							low:"http://oqvlh6ipq.bkt.clouddn.com/eva_low.mp4",
+							high:"http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+						}
+					}
+				},
+				`,
 			}
 		},
 		components: {
 			VideoCom
 		},
+		mounted(){
+			hljs.highlightBlock(this.$refs.code)
+		}
 	}
 </script>
 
 <style scoped lang="scss">
-
 </style>
