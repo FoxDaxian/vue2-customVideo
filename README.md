@@ -18,15 +18,16 @@ Vue.use(VueVideo);
 <vue-video src='xxx.mp4'></vue-video>
 ```
 
----
-现在，你可以自定义整体的颜色方案，请[下载自定义scss库](https://github.com/a13821190779/custom-vue2-video/archive/master.zip)  
+  
+现在，你可以自定义整体的颜色方案，请[下载自定义scss库](https://github.com/a13821190779/custom-vue2-video/archive/master.zip)
 ![folder](http://oqvlh6ipq.bkt.clouddn.com/custom-folder.png "下载解压后文件夹内容")
 
 首先解压到任意位置，然后修改scss库中的```theme.scss```文件(文件中有样式注释，如下)
 ![custom](http://oqvlh6ipq.bkt.clouddn.com/vue2-video.png "自定义主题说明")  
+
 然后，使用scss转换器(例如koala)，编译video.scss  
 最后，在```Vue.use(VueVideo)```下```import '你的路径/video.css'```
----
+
 
 
 
