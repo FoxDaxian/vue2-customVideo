@@ -1,3 +1,4 @@
+import 'babel-polyfill'//for sb ie
 import Vue from 'vue'
 import App from './App'
 
