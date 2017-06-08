@@ -28,73 +28,74 @@
 				<h2><span>第一步：</span>安装并绑定组件</h2>
 				<pre><code ref="code">{{intro}}</code></pre>
 			</div>
-		</div>		<div class="video">
-		<div class="tempWrap">
-			<h2><span>形态1：</span>仅仅一个src属性，具备基础的功能</h2>
-			<vue-video
-			src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
-			></vue-video>
-			<pre><code ref="code1">{{video1}}</code></pre>
+		</div>		
+		<div class="video">
+			<div class="tempWrap">
+				<h2><span>形态1：</span>仅仅一个src属性，具备基础的功能</h2>
+				<vue-video
+				src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+				></vue-video>
+				<pre><code ref="code1">{{video1}}</code></pre>
+			</div>
+		</div>
+		<div class="video">
+			<div class="tempWrap">
+				<h2><span>形态2：</span>自定义宽高(默认为800*500)</h2>
+				<vue-video
+				src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+				width="800px"
+				height="600px"
+				></vue-video>
+				<pre><code ref="code2">{{video2}}</code></pre>
+			</div>
+		</div>
+		<div class="video">
+			<div class="tempWrap">
+				<h2><span>形态3：</span>指定暂停播放显示图片和poster</h2>
+				<vue-video
+				src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+				:playImg='require("@/assets/play.png")'
+				:poster='require("@/assets/eva.jpg")'
+				></vue-video>
+				<pre><code ref="code3">{{video3}}</code></pre>
+			</div>
+		</div>
+		<div class="video">
+			<div class="tempWrap">
+				<h2><span>形态4：</span>自定义右键菜单</h2>
+				<vue-video
+				src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+				:menu="true"
+				></vue-video>
+				<pre><code ref="code4">{{video4}}</code></pre>
+			</div>
+		</div>
+		<div class="video">
+			<div class="tempWrap">
+				<h2><span>形态5：</span>切换清晰度</h2>
+				<video-com
+				src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+				:definition="definition"
+				></video-com>
+				<pre><code ref="code5">{{video5}}</code></pre>
+			</div>
+		</div>
+		<div class="video">
+			<div class="tempWrap">
+				<h2><span>究极形态：</span>合体进化</h2>
+				<video-com
+				src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
+				width="800px"
+				height="600px"
+				:playImg='require("@/assets/play.png")'
+				:poster='require("@/assets/eva.jpg")'
+				:menu="true"
+				:definition="definition"
+				></video-com>
+				<pre><code ref="code6">{{video6}}</code></pre>
+			</div>
 		</div>
 	</div>
-	<div class="video">
-		<div class="tempWrap">
-			<h2><span>形态2：</span>自定义宽高(默认为800*500)</h2>
-			<vue-video
-			src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
-			width="800px"
-			height="600px"
-			></vue-video>
-			<pre><code ref="code2">{{video2}}</code></pre>
-		</div>
-	</div>
-	<div class="video">
-		<div class="tempWrap">
-			<h2><span>形态3：</span>指定暂停播放显示图片和poster</h2>
-			<vue-video
-			src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
-			:playImg='require("@/assets/play.png")'
-			:poster='require("@/assets/eva.jpg")'
-			></vue-video>
-			<pre><code ref="code3">{{video3}}</code></pre>
-		</div>
-	</div>
-	<div class="video">
-		<div class="tempWrap">
-			<h2><span>形态4：</span>自定义右键菜单</h2>
-			<vue-video
-			src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
-			:menu="true"
-			></vue-video>
-			<pre><code ref="code4">{{video4}}</code></pre>
-		</div>
-	</div>
-	<div class="video">
-		<div class="tempWrap">
-			<h2><span>形态5：</span>切换清晰度</h2>
-			<video-com
-			src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
-			:definition="definition"
-			></video-com>
-			<pre><code ref="code5">{{video5}}</code></pre>
-		</div>
-	</div>
-	<div class="video">
-		<div class="tempWrap">
-			<h2><span>究极形态：</span>合体进化</h2>
-			<video-com
-			src="http://oqvlh6ipq.bkt.clouddn.com/eva_normal.mp4"
-			width="800px"
-			height="600px"
-			:playImg='require("@/assets/play.png")'
-			:poster='require("@/assets/eva.jpg")'
-			:menu="true"
-			:definition="definition"
-			></video-com>
-			<pre><code ref="code6">{{video6}}</code></pre>
-		</div>
-	</div>
-</div>
 </template>
 
 <script>

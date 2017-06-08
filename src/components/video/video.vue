@@ -326,7 +326,11 @@
 
 			//缓冲部分
 			this.v.onprogress = () => {
-				this.bufferBarWidth = this.v.buffered.end(0) / this.v.duration * this.progressBarWidth * 0.96;
+				try{
+					this.bufferBarWidth = this.v.buffered.end(0) / this.v.duration * this.progressBarWidth * 0.96;
+				}catch(err){
+
+				}
 			}
 			
 
@@ -514,6 +518,7 @@
 					this.$refs.video.addEventListener('mousemove', hideControlsFn);
 					this.$refs.controls.addEventListener('mouseover', keepControls);
 					this.$refs.controls.addEventListener('mouseout', releaseControls);
+					hideControlsFn();
 					// 进入全屏的时候改变键盘操控音量显示块的大小
 					this.keyDownShowStyle = {
 						width:window.screen.width * 0.07 + 'px',
@@ -577,7 +582,7 @@
 
 			//加载视频错误触发回调函数
 			this.v.onerror = function() {
-				console.log("错误");
+				console.log("视频源加载错误");
 			}
 		},
 		beforeDestroy(){

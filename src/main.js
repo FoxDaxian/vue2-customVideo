@@ -3,6 +3,7 @@ import Vue from 'vue'
 import App from './App'
 
 import VueVideo from "../lib/";
+import "../lib/video.css";
 Vue.use(VueVideo);
 
 
